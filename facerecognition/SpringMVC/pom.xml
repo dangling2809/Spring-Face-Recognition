@@ -1,0 +1,344 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.faces</groupId>
+    <artifactId>Face</artifactId>
+    <packaging>war</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>FaceRecognition</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <spring.version>3.2.2.RELEASE</spring.version>
+        <javacpp.skip>true</javacpp.skip>  <!-- To skip native compilation phase: -Djavacpp.cpp=true -->
+        <platform.name>${os.name}-${os.arch}</platform.name> <!-- For Android: -Dplatform.name=android-arm -->
+        <platform.root></platform.root>     <!-- For Android: -Dplatform.root=<path/to/android-ndk-r8e> -->
+        <compiler.path></compiler.path>     <!-- For Android: -Dcompiler.path=<path/to/arm-linux-androideabi-g++> -->
+        <javacpp.options></javacpp.options> <!-- To pass other options to JavaCPP -->
+        <!-- Reinclude the following with profiles, either all: -Pall
+        or selectively: -Pmarkers,ffmpeg,dc1394,flycapture,openkinect,ps3eye,videoinput,jogamp -->
+        <exclude.artoolkitplus>**/cpp/ARToolKitPlus.java</exclude.artoolkitplus>
+        <exclude.markers>**/Marke*.java</exclude.markers>
+        <exclude.calibration>**/*Calibrator.java</exclude.calibration>
+        <exclude.libav>**/cpp/av*.java</exclude.libav>
+        <exclude.libsw>**/cpp/sw*.java</exclude.libsw>
+        <exclude.postproc>**/cpp/postproc.java</exclude.postproc>
+        <exclude.ffmpeg>**/FFmpeg*.java</exclude.ffmpeg>
+        <exclude.dc1394>**/??1394*.java</exclude.dc1394>
+        <exclude.flycapture>**/*FlyCapture*.java</exclude.flycapture>
+        <exclude.freenect>**/cpp/freenect.java</exclude.freenect>
+        <exclude.openkinect>**/OpenKinectFrameGrabber.java</exclude.openkinect>
+        <exclude.ps3eye>**/PS3EyeFrameGrabber.java</exclude.ps3eye>
+        <exclude.videoinput>**/?ideoInput*.java</exclude.videoinput>
+        <exclude.opengl>**/GLCanvasFrame.java</exclude.opengl>
+        <exclude.opencl>**/*CL.java</exclude.opencl>
+    </properties>
+
+    <dependencies>
+
+        <!-- Spring 3 dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+                
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+                
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>4.2.8.Final</version>                    
+        </dependency>
+        <!-- MySQL database driver -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.9</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <!-- Face recogniton-->
+        
+        <dependency>
+            <groupId>com.googlecode.javacpp</groupId>
+            <artifactId>javacpp</artifactId>
+            <version>0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jogamp.gluegen</groupId>
+            <artifactId>gluegen-rt-main</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jogamp.jogl</groupId>
+            <artifactId>jogl-all-main</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jogamp.joal</groupId>
+            <artifactId>joal-main</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+  
+        <!--   <dependency>
+                <groupId>org.jocl</groupId>
+                <artifactId>jocl</artifactId>
+                <version>0.1.9</version>
+        </dependency>-->
+        <dependency>
+            <groupId>org.jogamp.jocl</groupId>
+            <artifactId>jocl-main</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+       
+        <dependency>
+            <groupId>cl.eye</groupId>
+            <artifactId>cl.eye</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.javacv</groupId>
+            <artifactId>com.googlecode.javacv</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.javacv.cpp.windows-x86</groupId>
+            <artifactId>com.googlecode.javacv.cpp.windows-x86</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.opencv</groupId>
+            <artifactId>com.opencv</artifactId>
+            <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ffmpeg</groupId>
+            <artifactId>com.ffmpeg</artifactId>
+            <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.14</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>7.0</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>javacpp</id>
+            <name>JavaCPP</name>
+            <url>http://maven2.javacpp.googlecode.com/git/</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <finalName>FaceRecognition</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <excludes>
+                        <exclude>${exclude.artoolkitplus}</exclude>
+                        <exclude>${exclude.markers}</exclude>
+                        <exclude>${exclude.calibration}</exclude>
+                        <exclude>${exclude.libav}</exclude>
+                        <exclude>${exclude.libsw}</exclude>
+                        <exclude>${exclude.postproc}</exclude>
+                        <exclude>${exclude.ffmpeg}</exclude>
+                        <exclude>${exclude.dc1394}</exclude>
+                        <exclude>${exclude.flycapture}</exclude>
+                        <exclude>${exclude.freenect}</exclude>
+                        <exclude>${exclude.openkinect}</exclude>
+                        <exclude>${exclude.ps3eye}</exclude>
+                        <exclude>${exclude.videoinput}</exclude>
+                        <exclude>${exclude.opengl}</exclude>
+                        <exclude>${exclude.opencl}</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <!--//-->
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${endorsed.dir}</outputDirectory>
+                            <silent>true</silent>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>javax</groupId>
+                                    <artifactId>javaee-endorsed-api</artifactId>
+                                    <version>7.0</version>
+                                    <type>jar</type>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <!--//-->
+                    <execution>
+                        <id>properties</id>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <id>javacpp</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${javacpp.skip}</skip>
+                            <environmentVariables>
+                                <!-- Hack required for Windows SDK v7.1 and videoInputLib -->
+                                <CL>&quot;/I${env.SDKDIR}/Include/&quot;</CL>
+                            </environmentVariables>
+                            <executable>java</executable>
+                            <commandlineArgs>-jar "${com.googlecode.javacpp:javacpp:jar}" -properties ${platform.name} -Dplatform.root=${platform.root} -Dcompiler.path=${compiler.path} ${javacpp.options} -classpath "${project.build.outputDirectory}" -jarprefix "${project.build.directory}/${project.artifactId}" com.googlecode.javacv.cpp.*</commandlineArgs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/googlecode/javacv/cpp/*.h</exclude>
+                        <exclude>com/googlecode/javacv/cpp/android-arm/</exclude>
+                        <exclude>com/googlecode/javacv/cpp/android-x86/</exclude>
+                        <exclude>com/googlecode/javacv/cpp/linux-arm/</exclude>
+                        <exclude>com/googlecode/javacv/cpp/linux-x86/</exclude>
+                        <exclude>com/googlecode/javacv/cpp/linux-x86_64/</exclude>
+                        <exclude>com/googlecode/javacv/cpp/macosx-x86/</exclude>
+                        <exclude>com/googlecode/javacv/cpp/macosx-x86_64/</exclude>
+                        <exclude>com/googlecode/javacv/cpp/windows-x86/</exclude>
+                        <exclude>com/googlecode/javacv/cpp/windows-x86_64/</exclude>
+                    </excludes>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.googlecode.javacv.JavaCV</mainClass>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                        <manifestEntries>
+                            <!-- <addClasspath/> is broken: http://jira.codehaus.org/browse/MJAR-61 -->
+                            <Class-Path>./ javacpp.jar javacv-linux-arm.jar javacv-linux-x86.jar javacv-linux-x86_64.jar javacv-macosx-x86.jar javacv-macosx-x86_64.jar javacv-windows-x86.jar javacv-windows-x86_64.jar</Class-Path>
+                            <Name>com/googlecode/javacv/</Name>
+                            <Implementation-Title>${project.name}</Implementation-Title>
+                            <Implementation-Vendor>Samuel Audet</Implementation-Vendor>
+                            <Implementation-Version>${project.version}</Implementation-Version>
+                            <Specification-Title>${project.name}</Specification-Title>
+                            <Specification-Vendor>Samuel Audet</Specification-Vendor>
+                            <Specification-Version>${project.version}</Specification-Version>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <createChecksum>true</createChecksum>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>${project.version}</version>
+                            <classifier>${platform.name}</classifier>
+                            <packaging>jar</packaging>
+                            <file>${project.build.directory}/${project.artifactId}-${platform.name}.jar</file>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.5</version>
+                <executions>
+                    <execution>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <repositoryId>${project.distributionManagement.repository.id}</repositoryId>
+                            <url>${project.distributionManagement.repository.url}</url>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>${project.version}</version>
+                            <classifier>${platform.name}</classifier>
+                            <packaging>jar</packaging>
+                            <file>${project.build.directory}/${project.artifactId}-${platform.name}.jar</file>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
