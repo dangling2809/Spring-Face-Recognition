@@ -6,8 +6,11 @@
 
 package com.faces.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,14 +21,20 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/capture")
 public class CaptureController {
-    
     private ModelAndView mav;
     
-    @RequestMapping(value = "/snapshot")
-    public ModelAndView saveSnapshot(@RequestParam String rollNumber)
-    {
-        mav=new ModelAndView();
-        
+   @RequestMapping(value = "/set/rollnumber",method = RequestMethod.POST)
+    public ModelAndView setRollnumber(HttpServletRequest  request){
+        String roll =  request.getParameter("tbRollNumber");
+        System.out.println("....................rollNumber = "+roll);
+        mav=new ModelAndView("upload");
+        return mav;
+    }
+  
+     @RequestMapping(value = "/save/snapshot",method = RequestMethod.POST)
+    public ModelAndView saveSnapshot(@RequestParam(value="sam",required = false)String sam){
+        System.out.println("....................rollNumber = "+sam);
+        mav=new ModelAndView("upload");
         return mav;
     }
 }

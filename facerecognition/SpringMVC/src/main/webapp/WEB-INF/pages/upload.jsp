@@ -183,7 +183,7 @@
 
         </script>
         <script language="JavaScript">
-            webcam.set_api_url('capture/save/snapshot');
+            webcam.set_api_url('/SpringMVC/capture/save/snapshot');
             webcam.set_quality(90); // JPEG quality (1 - 100)
             webcam.set_shutter_sound(true); // play shutter click sound
         </script>
@@ -194,9 +194,23 @@
         <title>Upload Image</title>
     </head>
     <body>
+        <form method="post" action="${pageContext.request.contextPath}/capture/set/rollnumber">
+            <br/>
+            <input type="text" name="tbRollNumber" id="tbRollNumber"/>
+                <br/>
+                <input type="submit" value="Add.."/>
+            </form>
+            <br/><br/><br/>
+            <form method="post" action="${pageContext.request.contextPath}/capture/save/snapshot">
+            <br/>
+            <input type="text" name="sam" id="sam"/>
+                <br/>
+                <input type="submit" value="Add.."/>
+            </form>
         <br/><form>
             <input type=button value="Configure..." onClick="webcam.configure()">
             &nbsp;&nbsp;&nbsp;
+          
             <input type=button value="Take Snapshot" onClick="webcam.snap()">
             <div id="upload_results" name ="upload_results">
                 Image Will uploaded here.....
